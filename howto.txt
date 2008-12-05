@@ -1,0 +1,80 @@
+
+How to use Balie?
+-----------------
+
+IMPORTANT NOTE: 
+--------------
+** Balie is released with pre-built models for language identification (LanguageIdentificationModel.sig)
+** and sentence boundary recognition (SentenceBoundariesRecognition.sig).
+** You could re-train/fine-tune these models but you do need the training and testing corpora.
+** For copyright reasons, these corpora are NOT released with this distribution.
+** Contact project admin (pythonner at gmail) for additional information. 
+
+AUDIENCE:
+---------
+Balie is a tool for programmers. 
+There is no graphical user interface. 
+It must be used programmatically (in Java).
+You'll find example of calls in the test suite (ca.uottawa.balie.test) 
+
+
+BALIE MODULES SUMMARY:
+---------------------
+The main Balie' modules are:
+
+
+	1) Balie.java --> Constants and debug flags
+	
+
+	2) LanguageIdentification --> Land ID module
+	
+			String strTest = "blah blah blah.";
+			LanguageIdentification li = new LanguageIdentification();
+			String strLanguage = li.DetectLanguage(strTest);
+		
+
+	3) Tokenizer --> Tokenize, find sentence boundaries etc..
+	
+			Tokenizer tokenizer = new Tokenizer(strLanguage, true);
+			tokenizer.Tokenize(strTest);
+			TokenList alTokenList = tokenizer.GetTokenList();
+	
+
+	4) Named-Entity Recognition --> recognize named entities in context
+	
+			/*
+			** NER in Balie is a "Baseline" system.
+			** The system (architechture and performance) is explained in the paper:
+			**
+			** Nadeau, D., Turney, P. D. and Matwin, S. (2006)
+			** Unsupervised Named-Entity Recognition: Generating Gazetteers and Resolving Ambiguity.
+			** Proc. Canadian Conference on Artificial Intelligence.
+			*/
+	
+	        Tokenizer tokenizer = new Tokenizer(Balie.LANGUAGE_ENGLISH, true);
+        
+            LexiconOnDiskI lexicon = new LexiconOnDisk(LexiconOnDisk.Lexicon.OPEN_SOURCE_LEXICON);
+            DisambiguationRulesNerf disambiguationRules = DisambiguationRulesNerf.Load();
+            
+            tokenizer.Tokenize(strText);
+            TokenList alTokenList = tokenizer.GetTokenList();
+
+            NamedEntityRecognitionNerf ner = new NamedEntityRecognitionNerf(
+                    alTokenList, 
+                    lexicon, 
+                    disambiguationRules,
+                    new PriorCorrectionNerf(),
+                    NamedEntityTypeEnumMappingNerf.values(),
+                    true);
+            ner.RecognizeEntities();
+            
+            alTokenList = ner.GetTokenList();
+
+
+KICK-START:
+-----------
+For a kick start, check go.bat (win32) and go.sh (linux) files...
+
+
+March 26th, 2007
+

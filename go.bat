@@ -1,0 +1,1 @@
+java -cp .;.\lib\weka.jar ca.uottawa.balie.test.TestAll

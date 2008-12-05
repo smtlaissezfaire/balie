@@ -1,0 +1,15 @@
+ms
+mr
+sgt
+jr
+col
+dr
+miss
+lt
+mister
+madam
+prof
+sir
+msr
+phd
+doctor
